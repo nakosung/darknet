@@ -7,6 +7,10 @@
 #include <stdlib.h>
 #include <string.h>
 
+#if defined(_MSC_VER)
+#define rand_r(x) rand()
+#endif
+
 unsigned int data_seed;
 
 list *get_paths(char *filename)
@@ -719,6 +723,7 @@ void *load_thread(void *ptr)
     return 0;
 }
 
+#if !defined(_MSC_VER)
 pthread_t load_data_in_thread(load_args args)
 {
     pthread_t thread;
@@ -727,6 +732,7 @@ pthread_t load_data_in_thread(load_args args)
     if(pthread_create(&thread, 0, load_thread, ptr)) error("Thread creation failed");
     return thread;
 }
+#endif
 
 data load_data_writing(char **paths, int n, int m, int w, int h, int out_w, int out_h)
 {
